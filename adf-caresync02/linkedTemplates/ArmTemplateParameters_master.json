@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-caresync02"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "caresync-server02.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "caresync-database"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "pawanrai"
+		},
+		"LS_ADLS_properties_typeProperties_url": {
+			"value": "https://caresyncstorageacc02.dfs.core.windows.net/"
+		},
+		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
+			"value": "1106-195616-2uxq8796"
+		},
+		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://casesync-keyvault.vault.azure.net/"
+		},
+		"LS_AzureSqlDatabase_properties_typeProperties_server": {
+			"value": "caresync-server02.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_properties_typeProperties_database": {
+			"value": "caresync-database"
+		},
+		"LS_AzureSqlDatabase_properties_typeProperties_userName": {
+			"value": "pawanrai"
+		},
+		"LS_PostgreSql_properties_typeProperties_server": {
+			"value": "ep-frosty-leaf-b394yhc8-pooler.c-4.ap-southeast-1.aws.neon.tech"
+		},
+		"LS_PostgreSql_properties_typeProperties_database": {
+			"value": "neondb"
+		},
+		"LS_PostgreSql_properties_typeProperties_username": {
+			"value": "neondb_owner"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
