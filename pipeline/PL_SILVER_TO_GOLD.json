@@ -48,7 +48,7 @@
 						"value": "@activity('Read Source Table Lists').output.value",
 						"type": "Expression"
 					},
-					"isSequential": false,
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "Insert inprogress status",
