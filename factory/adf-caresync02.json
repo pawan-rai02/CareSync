@@ -1,0 +1,12 @@
+{
+	"name": "adf-caresync02",
+	"properties": {
+		"globalParameters": {
+			"email_receipent": {
+				"type": "string",
+				"value": "pawanvirat32@gmail.com"
+			}
+		}
+	},
+	"location": "eastasia"
+}
