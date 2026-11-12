@@ -55,8 +55,103 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "body_header",
+					"variableName": "body_footer",
 					"value": "For any support please reach out to pawanvirat32@gmail.com"
+				}
+			},
+			{
+				"name": "Prepare email Subject",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Check overall failed count",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "email_subject",
+					"value": {
+						"value": "@{pipeline().globalParameters.env} | @{if(greater(activity('Check overall failed count').output.firstRow.count, 0), 'FAILED', 'SUCCESS')} | CARESYNC MASTER RUN",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Check overall failed count",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "select count(*) as count from ctrl.audit_log where adf_run_id = '@{pipeline().parameters.adf_run_id}'\r\nand status != 'SUCCESS'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "Prepare Logic apps body",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Prepare email Subject",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Read All Tables Status",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Prepare email body header",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Prepare email body footer",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "logic_apps_body",
+					"value": {
+						"value": "@concat(\n    '{',\n    '\"subject\":\"', variables('email_subject'), '\",',\n    '\"email_recipients\":\"', pipeline().globalParameters.email_receipent, '\",',\n    '\"body_header\":\"', variables('body_header'), '\",',\n    '\"body_footer\":\"', variables('body_footer'), '\",',\n    '\"status_table\":', string(activity('Read All Tables Status').output.value),\n    '}'\n)",
+						"type": "Expression"
+					}
 				}
 			}
 		],
@@ -68,6 +163,15 @@
 		},
 		"variables": {
 			"body_header": {
+				"type": "String"
+			},
+			"email_subject": {
+				"type": "String"
+			},
+			"logic_apps_body": {
+				"type": "String"
+			},
+			"body_footer": {
 				"type": "String"
 			}
 		},
