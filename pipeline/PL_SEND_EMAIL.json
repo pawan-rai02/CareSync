@@ -8,7 +8,7 @@
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
-					"retry": 0,
+					"retry": 3,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
@@ -150,6 +150,40 @@
 					"variableName": "logic_apps_body",
 					"value": {
 						"value": "@concat(\n    '{',\n    '\"subject\":\"', variables('email_subject'), '\",',\n    '\"email_recipients\":\"', pipeline().globalParameters.email_receipent, '\",',\n    '\"body_header\":\"', variables('body_header'), '\",',\n    '\"body_footer\":\"', variables('body_footer'), '\",',\n    '\"status_table\":', string(activity('Read All Tables Status').output.value),\n    '}'\n)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Send mail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Prepare Logic apps body",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": {
+						"value": "@pipeline().globalParameters.logic_apps_url",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "@variables('logic_apps_body')",
 						"type": "Expression"
 					}
 				}
